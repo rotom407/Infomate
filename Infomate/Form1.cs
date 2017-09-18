@@ -161,6 +161,7 @@ namespace Infomate
         private double meterAnow = 0.0;
         private double meterBnow = 0.0;
         private String metertext = "";
+        private string batterypath = "";
         private byte meterBR = 0, meterBG = 0, meterBB = 0;
         private bool Fshrink = false;
         private BATTERY_STATUS batterystats;
@@ -174,7 +175,8 @@ namespace Infomate
             Opacity = 0.80;
             Left = (int)(0.8 * rect.Width - Width);
             Top = (int)(0.8 * rect.Height-Height);
-            batterystats = getbatterystatus();
+            batterypath = getbatterypath();
+            batterystats = getbatterystatus(batterypath);
             TopMost = true;
         }
 
@@ -309,29 +311,33 @@ namespace Infomate
             Application.Exit();
         }
 
-        private BATTERY_STATUS getbatterystatus()
+        private string getbatterypath()
         {
             IntPtr hdev;
-            SP_DEVICE_INTERFACE_DATA did=new SP_DEVICE_INTERFACE_DATA();
+            SP_DEVICE_INTERFACE_DATA did = new SP_DEVICE_INTERFACE_DATA();
             SP_DEVICE_INTERFACE_DETAIL_DATA didd = new SP_DEVICE_INTERFACE_DETAIL_DATA();
-            BATTERY_WAIT_STATUS bws;
-            BATTERY_STATUS res= new BATTERY_STATUS();
-            SafeFileHandle hBattery;
             uint cbReq = 0;
-            int err, outLen=0;
-            int wait = 1000, s = 0;
-            string path;
+            int err = 0;
             did.cbSize = Marshal.SizeOf(did);
             didd.cbSize = /*Marshal.SizeOf(didd)*/4 + Marshal.SystemDefaultCharSize;
-            hdev = SetupDiGetClassDevs(ref GUID_DEVICE_BATTERY,"",IntPtr.Zero,0x2|0x10);
+            hdev = SetupDiGetClassDevs(ref GUID_DEVICE_BATTERY, "", IntPtr.Zero, 0x2 | 0x10);
             err = Marshal.GetLastWin32Error();
-            SetupDiEnumDeviceInterfaces(hdev, IntPtr.Zero,ref GUID_DEVICE_BATTERY, 1,ref did);
+            SetupDiEnumDeviceInterfaces(hdev, IntPtr.Zero, ref GUID_DEVICE_BATTERY, 1, ref did);
             err = Marshal.GetLastWin32Error();
             SetupDiGetDeviceInterfaceDetail(hdev, ref did, IntPtr.Zero, 0, ref cbReq, IntPtr.Zero);
             err = Marshal.GetLastWin32Error();
-            SetupDiGetDeviceInterfaceDetail(hdev, ref did,ref didd, cbReq, ref cbReq, IntPtr.Zero);
+            SetupDiGetDeviceInterfaceDetail(hdev, ref did, ref didd, cbReq, ref cbReq, IntPtr.Zero);
             err = Marshal.GetLastWin32Error();
-            path = didd.DevicePath.Substring(0);
+            return didd.DevicePath.Substring(0);
+        }
+
+        private BATTERY_STATUS getbatterystatus(string path)
+        {
+            BATTERY_WAIT_STATUS bws;
+            BATTERY_STATUS res = new BATTERY_STATUS();
+            SafeFileHandle hBattery;
+            int err = 0, outLen = 0;
+            int wait = 1000, s = 0;
             hBattery = CreateFile(path, 0x80000000 | 0x40000000, 0x1 | 0x2, IntPtr.Zero, 3, 0x80, IntPtr.Zero);
             err = Marshal.GetLastWin32Error();
             DeviceIoControl(hBattery, 2703424, ref wait, Marshal.SizeOf(wait), ref s, Marshal.SizeOf(s), ref outLen, IntPtr.Zero);
@@ -344,12 +350,13 @@ namespace Infomate
             DeviceIoControl(hBattery, 2703436, ref bws, Marshal.SizeOf(bws), ref res, Marshal.SizeOf(res), ref outLen, IntPtr.Zero);
             err = Marshal.GetLastWin32Error();
             //MessageBox.Show(res.Capacity.ToString());
+            hBattery.Close();
             return res;
         }
 
         private void timer2_Timer(object sender, EventArgs e)
         {
-            batterystats = getbatterystatus();
+            batterystats = getbatterystatus(batterypath);
             meterA = batterystats.Capacity/42400.0;
             meterB = ratewidthcol(batterystats.Rate, ref meterBR, ref meterBG, ref meterBB);
             if (Fshrink)
