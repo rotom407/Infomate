@@ -1,6 +1,6 @@
 ﻿namespace Infomate
 {
-    partial class Form1
+    partial class FrmMain
     {
         /// <summary>
         /// Required designer variable.
@@ -29,36 +29,44 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.contextMenu1 = new System.Windows.Forms.ContextMenu();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.TmrAnimation = new System.Windows.Forms.Timer(this.components);
+            this.TmrUpdateData = new System.Windows.Forms.Timer(this.components);
+            this.MnuOptions = new System.Windows.Forms.ContextMenu();
+            this.MenuItem2 = new System.Windows.Forms.MenuItem();
+            this.MenuItem1 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
-            // timer1
+            // TmrAnimation
             // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 33;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Timer);
+            this.TmrAnimation.Enabled = true;
+            this.TmrAnimation.Interval = 33;
+            this.TmrAnimation.Tick += new System.EventHandler(this.TmrAnimation_Timer);
             // 
-            // timer2
+            // TmrUpdateData
             // 
-            this.timer2.Enabled = true;
-            this.timer2.Interval = 1500;
-            this.timer2.Tick += new System.EventHandler(this.timer2_Timer);
+            this.TmrUpdateData.Enabled = true;
+            this.TmrUpdateData.Interval = 1500;
+            this.TmrUpdateData.Tick += new System.EventHandler(this.TmrUpdateData_Timer);
             // 
-            // contextMenu1
+            // MnuOptions
             // 
-            this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem1});
+            this.MnuOptions.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem2,
+            this.MenuItem1});
             // 
-            // menuItem1
+            // MenuItem2
             // 
-            this.menuItem1.Index = 0;
-            this.menuItem1.Text = "Quit";
-            this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
+            this.MenuItem2.Index = 0;
+            this.MenuItem2.Text = "Add Item...";
+            this.MenuItem2.Click += new System.EventHandler(this.MenuItem2_Click);
             // 
-            // Form1
+            // MenuItem1
+            // 
+            this.MenuItem1.Index = 1;
+            this.MenuItem1.Text = "Quit";
+            this.MenuItem1.Click += new System.EventHandler(this.MenuItem1_Click);
+            // 
+            // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -68,7 +76,7 @@
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "Form1";
+            this.Name = "FrmMain";
             this.Opacity = 0.5D;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -83,10 +91,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Timer timer2;
-        private System.Windows.Forms.ContextMenu contextMenu1;
-        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.Timer TmrAnimation;
+        private System.Windows.Forms.Timer TmrUpdateData;
+        private System.Windows.Forms.ContextMenu MnuOptions;
+        private System.Windows.Forms.MenuItem MenuItem1;
+        private System.Windows.Forms.MenuItem MenuItem2;
     }
 }
 

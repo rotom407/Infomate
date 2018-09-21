@@ -12,24 +12,20 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace Infomate
-{
+namespace Infomate {
 
-    public partial class Form1 : Form
-    {
+    public partial class FrmMain : Form {
         Guid GUID_DEVICE_BATTERY = new Guid(0x72631E54, 0x78A4, 0x11D0, 0xBC, 0xF7, 0x00, 0xAA, 0x00, 0xB7, 0xB3, 0x2A);
 
         [StructLayout(LayoutKind.Sequential)]
-        struct SP_DEVICE_INTERFACE_DATA
-        {
+        struct SP_DEVICE_INTERFACE_DATA {
             public Int32 cbSize;
             public Guid interfaceClassGuid;
             public Int32 flags;
-            private UIntPtr reserved;
+            private readonly UIntPtr reserved;
         }
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        struct SP_DEVICE_INTERFACE_DETAIL_DATA
-        {
+        struct SP_DEVICE_INTERFACE_DETAIL_DATA {
             public int cbSize;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
             public string DevicePath;
@@ -40,18 +36,16 @@ namespace Infomate
             public int cbSize;
             public char devicePath;
         }*/
-        
+
         [StructLayout(LayoutKind.Sequential)]
-        struct SP_DEVINFO_DATA
-        {
+        struct SP_DEVINFO_DATA {
             public uint cbSize;
             public Guid classGuid;
             public uint devInst;
             public IntPtr reserved;
         }
         [StructLayout(LayoutKind.Sequential)]
-        struct BATTERY_WAIT_STATUS
-        {
+        struct BATTERY_WAIT_STATUS {
             public int BatteryTag;
             public int Timeout;
             public int PowerState;
@@ -59,8 +53,7 @@ namespace Infomate
             public int HighCapacity;
         }
         [StructLayout(LayoutKind.Sequential)]
-        struct BATTERY_STATUS
-        {
+        struct BATTERY_STATUS {
             public int PowerState;
             public int Capacity;
             public int Voltage;
@@ -107,7 +100,7 @@ namespace Infomate
         static extern void MoveMemory(IntPtr dest, IntPtr src, int size);
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall,
             SetLastError = true)]
-                public static extern SafeFileHandle CreateFile(
+        public static extern SafeFileHandle CreateFile(
             string lpFileName,
             uint dwDesiredAccess,
             uint dwShareMode,
@@ -117,7 +110,7 @@ namespace Infomate
             IntPtr hTemplateFile
         );
         [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-            static extern bool DeviceIoControl(
+        static extern bool DeviceIoControl(
             Microsoft.Win32.SafeHandles.SafeFileHandle hDevice,
             uint IoControlCode,
             ref int InBuffer,
@@ -144,10 +137,9 @@ namespace Infomate
         public static extern bool ReleaseCapture();
 
 
-        public Form1()
-        {
+        public FrmMain() {
             InitializeComponent();
-            ContextMenu = contextMenu1;
+            ContextMenu = MnuOptions;
         }
 
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -166,17 +158,16 @@ namespace Infomate
         private bool Fshrink = false;
         private BATTERY_STATUS batterystats;
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            Rectangle rect=Screen.PrimaryScreen.Bounds;
+        private void Form1_Load(object sender, EventArgs e) {
+            Rectangle rect = Screen.PrimaryScreen.Bounds;
             ShowInTaskbar = false;
             Width = (int)Fwidthnow;
             Height = STACKHEIGHT;
             Opacity = 0.80;
             Left = (int)(0.8 * rect.Width - Width);
-            Top = (int)(0.8 * rect.Height-Height);
-            batterypath = getbatterypath();
-            batterystats = getbatterystatus(batterypath);
+            Top = (int)(0.8 * rect.Height - Height);
+            batterypath = Getbatterypath();
+            batterystats = Getbatterystatus(batterypath);
             TopMost = true;
         }
 
@@ -191,11 +182,10 @@ namespace Infomate
             }
         }*/
 
-        private void Form1_Paint(object sender,PaintEventArgs e)
-        {
+        private void Form1_Paint(object sender, PaintEventArgs e) {
             SolidBrush backbr = new SolidBrush(Color.FromArgb(255, meterBR, meterBG, meterBB));
             SolidBrush frontbkbr = new SolidBrush(Color.FromArgb(255, 32, 32, 32));
-            SolidBrush frontbr = new SolidBrush(frontcolor(batterystats.Capacity));
+            SolidBrush frontbr = new SolidBrush(Frontcolor(batterystats.Capacity));
             Rectangle back = new Rectangle(0, 0, (int)(Width * meterBnow), Height);
             Rectangle frontbk = new Rectangle(2, 2, Width - 4, Height - 4);
             Rectangle front = new Rectangle(3, 3, (int)(meterAnow * (Width - 6)), Height - 6);
@@ -219,86 +209,66 @@ namespace Infomate
         private Point dragCursorPoint;
         private Point dragFormPoint;
 
-        private void Form1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
+        private void Form1_MouseDown(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Left) {
                 dragging = true;
                 dragCursorPoint = Cursor.Position;
                 dragFormPoint = this.Location;
             }
         }
 
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (dragging)
-            {
+        private void Form1_MouseMove(object sender, MouseEventArgs e) {
+            if (dragging) {
                 Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
                 this.Location = Point.Add(dragFormPoint, new Size(dif));
             }
         }
 
-        private void Form1_MouseUp(object sender, MouseEventArgs e)
-        {
+        private void Form1_MouseUp(object sender, MouseEventArgs e) {
             dragging = false;
-            if (e.Button == MouseButtons.Right)
-            {
-                
+            if (e.Button == MouseButtons.Right) {
+
             }
         }
 
-        private void Form1_Doubleclick(object sender, MouseEventArgs e)
-        {
+        private void Form1_Doubleclick(object sender, MouseEventArgs e) {
 
-            if (Fshrink)
-            {
+            if (Fshrink) {
                 Fwidthtarget = STACKWIDTH;
-            }
-            else
-            {
-                Fwidthtarget = STACKWIDTH/4;
+            } else {
+                Fwidthtarget = STACKWIDTH / 4;
             }
             Fshrink = !Fshrink;
-            timer2_Timer(null, null);
+            TmrUpdateData_Timer(null, null);
         }
 
-        private Color frontcolor(int refvalueA)
-        {
+        private Color Frontcolor(int refvalueA) {
             return Color.FromArgb(255, 255, 255, 255);
         }
-        private Color backcolor(int refvalueA)
-        {
+        private Color Backcolor(int refvalueA) {
             return Color.FromArgb(255, 255, 255, 255);
         }
-        private double clamp(double x)
-        {
+        private double Clamp(double x) {
             if (x > 1.0) return 1.0;
             if (x < 0.0) return 0.0;
             return x;
         }
-        private double ratewidthcol(int batrate,ref byte R,ref byte G,ref byte B)
-        {
+        private double Ratewidthcol(int batrate, ref byte R, ref byte G, ref byte B) {
             double tmp;
-            if (batrate > 0)
-            {
-                tmp = clamp((batrate - 29000) / 4000.0);
+            if (batrate > 0) {
+                tmp = Clamp((batrate - 29000) / 4000.0);
                 R = 0; G = 178; B = 148;
-            }
-            else if (batrate == 0)
-            {
-                tmp=0.0;
+            } else if (batrate == 0) {
+                tmp = 0.0;
                 R = 0; G = 0; B = 0;
-            }
-            else
-            {
-                tmp = clamp((-batrate - 2000) / 10000.0);
-                R = (byte)(tmp*255); G = 178; B = 148;
+            } else {
+                tmp = Clamp((-batrate - 2000) / 10000.0);
+                R = (byte)(tmp * 255); G = 178; B = 148;
             }
             return tmp;
         }
 
-        private void timer1_Timer(object sender, EventArgs e)
-        {
+        private void TmrAnimation_Timer(object sender, EventArgs e) {
             Fwidthnow = (2.0 * Fwidthnow + Fwidthtarget) / 3.0;
             Width = (int)Fwidthnow;
             meterAnow = meterA;
@@ -306,13 +276,23 @@ namespace Infomate
             Invalidate();
         }
 
-        private void menuItem1_Click(object sender, EventArgs e)
-        {
+        private void MenuItem1_Click(object sender, EventArgs e) {
             Application.Exit();
         }
 
-        private string getbatterypath()
-        {
+        private void MenuItem2_Click(object sender, EventArgs e) {
+            FrmConfig form2 = new FrmConfig();
+            switch (form2.ShowDialog()) {
+                case DialogResult.OK:
+
+                    MessageBox.Show(form2.textBox1.Text);
+                    break;
+                case DialogResult.Cancel:
+                    break;
+            }
+        }
+
+        private string Getbatterypath() {
             IntPtr hdev;
             SP_DEVICE_INTERFACE_DATA did = new SP_DEVICE_INTERFACE_DATA();
             SP_DEVICE_INTERFACE_DETAIL_DATA didd = new SP_DEVICE_INTERFACE_DETAIL_DATA();
@@ -331,8 +311,7 @@ namespace Infomate
             return didd.DevicePath.Substring(0);
         }
 
-        private BATTERY_STATUS getbatterystatus(string path)
-        {
+        private BATTERY_STATUS Getbatterystatus(string path) {
             BATTERY_WAIT_STATUS bws;
             BATTERY_STATUS res = new BATTERY_STATUS();
             SafeFileHandle hBattery;
@@ -354,47 +333,21 @@ namespace Infomate
             return res;
         }
 
-        private void timer2_Timer(object sender, EventArgs e)
-        {
-            batterystats = getbatterystatus(batterypath);
-            meterA = batterystats.Capacity/42400.0;
-            meterB = ratewidthcol(batterystats.Rate, ref meterBR, ref meterBG, ref meterBB);
-            if (Fshrink)
-            {
+        private void TmrUpdateData_Timer(object sender, EventArgs e) {
+            batterystats = Getbatterystatus(batterypath);
+            meterA = batterystats.Capacity / 42400.0;
+            meterB = Ratewidthcol(batterystats.Rate, ref meterBR, ref meterBG, ref meterBB);
+            if (Fshrink) {
                 metertext = String.Format("{0:F2}", batterystats.Capacity / 424.0);
-            }
-            else
-            {
-                if (batterystats.Rate < 0)
-                {
+            } else {
+                if (batterystats.Rate < 0) {
                     metertext = String.Format("{0:F2}% T={1:F1}h P={2:F1}W", batterystats.Capacity / 424.0, -(double)batterystats.Capacity / batterystats.Rate, Math.Abs(batterystats.Rate) / 1000.0);
-                }
-                else if (batterystats.Rate == 0)
-                {
+                } else if (batterystats.Rate == 0) {
                     metertext = String.Format("{0:F2}% P=0W", batterystats.Capacity / 424.0);
-                }
-                else
-                {
-                    metertext = String.Format("{0:F2}% T={1:F1}h P={2:F1}W", batterystats.Capacity / 424.0, (42400.0-(double)batterystats.Capacity) / batterystats.Rate, Math.Abs(batterystats.Rate) / 1000.0);
+                } else {
+                    metertext = String.Format("{0:F2}% T={1:F1}h P={2:F1}W", batterystats.Capacity / 424.0, (42400.0 - (double)batterystats.Capacity) / batterystats.Rate, Math.Abs(batterystats.Rate) / 1000.0);
                 }
             }
-                /*
-            System.Management.ObjectQuery query = new ObjectQuery("Select * FROM Win32_Battery");
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
-
-            ManagementObjectCollection collection = searcher.Get();
-
-            foreach (ManagementObject mo in collection)
-            {
-                foreach (PropertyData property in mo.Properties)
-                {
-                    //if(property.Name=="")
-                    Debug.Print("Property {0}: Value is {1}", property.Name, property.Value);
-                }
-            }
-            */
         }
-
-
     }
 }
