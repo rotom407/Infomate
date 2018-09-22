@@ -11,10 +11,11 @@ namespace Infomate {
         public Color ColorBegin = Color.FromArgb(255, 255, 255);
         public Color ColorEnd = Color.FromArgb(255, 255, 255);
         public double PercentDisp = 0.0;
-        public double AnimationSpeed = 0.1;
+        public double AnimationSpeed = 0.2;
         public bool EnableAnimation = true;
+        public bool AlwaysInstant = false;
         public void UpdateAnimation(bool instant) {
-            if (EnableAnimation&&!instant) {
+            if (EnableAnimation&&!instant&&!AlwaysInstant) {
                 PercentDisp = (1.0 - AnimationSpeed) * PercentDisp + AnimationSpeed * Percent;
             } else {
                 PercentDisp = Percent;

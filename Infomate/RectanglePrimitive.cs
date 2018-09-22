@@ -7,8 +7,8 @@ using System.Drawing;
 
 namespace Infomate {
     class RectanglePrimitive {
-        public Rectangle prim;
-        public Color col;
+        public Rectangle prim=new Rectangle();
+        public Color col=new Color();
         public RectanglePrimitive() {
             prim = Rectangle.FromLTRB(0,0,0,0);
             col = Color.FromArgb(255, 255, 255);

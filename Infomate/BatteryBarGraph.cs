@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 using Microsoft.Win32.SafeHandles;
 
 namespace Infomate {
@@ -124,7 +125,7 @@ namespace Infomate {
         }
 
         private string batterypath = "";
-        private BATTERY_STATUS batterystats;
+        private BATTERY_STATUS batterystats=new BATTERY_STATUS();
 
         private string Getbatterypath() {
             IntPtr hdev;
@@ -208,6 +209,7 @@ namespace Infomate {
                 BackgroundMeter.ColorEnd = Color.FromArgb(255, 178, 148);
             }
             HighlightMeter.Percent = 0.0;
+            //Debug.WriteLine(batterystats.Voltage);
         }
     }
 }
