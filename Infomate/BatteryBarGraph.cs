@@ -175,6 +175,8 @@ namespace Infomate {
             BackgroundMeter.ColorEnd = Color.FromArgb(255, 178, 148);
             ForegroundMeter.ColorBegin = Color.FromArgb(255, 255, 255);
             ForegroundMeter.ColorEnd = Color.FromArgb(255, 255, 255);
+            ForegroundMeter.AlwaysInstant = true;
+            HighlightMeter.AlwaysInstant = true;
         }
 
         public override string GetString() {

@@ -34,28 +34,18 @@ namespace Infomate {
             Left = (int)(0.8 * rect.Width - Width);
             Top = (int)(0.8 * rect.Height - Height);
             TopMost = true;
-
+            
             bargraphlist.Add(new BatteryBarGraph());
-            foreach(BarGraphElement bge in bargraphlist) {
+            bargraphlist.Add(new CPUMemoryBarGraph());
+            int i = 0;
+            foreach (BarGraphElement bge in bargraphlist) {
                 bge.Initialize();
-                bge.Boundary = new Rectangle(0, 0, 200, 24);
+                bge.Boundary = new Rectangle(0, i*24, 200, 24);
+                i++;
             }
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e) {
-            /*
-            SolidBrush backbr = new SolidBrush(Color.FromArgb(255, meterBR, meterBG, meterBB));
-            SolidBrush frontbkbr = new SolidBrush(Color.FromArgb(255, 32, 32, 32));
-            SolidBrush frontbr = new SolidBrush(Frontcolor(batterystats.Capacity));
-            Rectangle back = new Rectangle(0, 0, (int)(Width * meterBnow), Height);
-            Rectangle frontbk = new Rectangle(2, 2, Width - 4, Height - 4);
-            Rectangle front = new Rectangle(3, 3, (int)(meterAnow * (Width - 6)), Height - 6);
-            //e.Graphics.Clear(Color.Black);
-            e.Graphics.FillRectangle(backbr, back);
-            e.Graphics.FillRectangle(frontbkbr, frontbk);
-            e.Graphics.FillRectangle(frontbr, front);
-            e.Graphics.DrawString(metertext, Font, Brushes.White, 5, 3);
-            e.Graphics.DrawString(metertext, Font, Brushes.Black, 5, 2);*/
             foreach(BarGraphElement bge in bargraphlist) {
                 List<RectanglePrimitive> rectanglePrimitives = bge.GetPrimitives();
                 foreach(RectanglePrimitive rp in rectanglePrimitives) {
