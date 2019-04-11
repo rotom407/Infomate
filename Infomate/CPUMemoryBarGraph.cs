@@ -76,7 +76,7 @@ namespace Infomate {
             disktotalpercent = diskCounter.NextValue();
             ramtotalpercent = 100.0f*(1.0f - ramfreenum / totalramsize);
             BackgroundMeter.Percent = Clamp(cputotalpercent / 100.0);
-            ForegroundMeter.Percent = Clamp(ramtotalpercent / 100.0);
+            ForegroundMeter.Percent = Clamp(1.0-ramtotalpercent / 100.0);
             /*
             ForegroundMeter.Percent = batterystats.Capacity / 42400.0;
             if (batterystats.Rate > 0) {

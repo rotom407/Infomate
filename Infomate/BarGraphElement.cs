@@ -41,13 +41,13 @@ namespace Infomate {
             //Background Color
             primlist.Add(new RectanglePrimitive(Rectangle.FromLTRB(bdleft, bdtop, bdleft + bdwidth, bdtop + bdheight), BackgroundColor));
             //Background Bar
-            primlist.Add(new RectanglePrimitive(Rectangle.FromLTRB(bdleft, bdtop, (int)(bdleft + bdwidth * BackgroundMeter.PercentDisp), bdtop + bdheight), BlendColor(BackgroundMeter.ColorBegin,BackgroundMeter.ColorEnd,BackgroundMeter.PercentDisp)));
+            primlist.Add(new RectanglePrimitive(Rectangle.FromLTRB(bdleft, bdtop, Convert.ToInt32(bdleft + bdwidth * BackgroundMeter.PercentDisp), bdtop + bdheight), BlendColor(BackgroundMeter.ColorBegin,BackgroundMeter.ColorEnd,BackgroundMeter.PercentDisp)));
             //Foreground Background
             primlist.Add(new RectanglePrimitive(Rectangle.FromLTRB(bdleft + 2, bdtop + 2, bdleft + bdwidth - 2, bdtop + bdheight - 2), ForegroundBackgroundColor));
             //Foreground Bar
-            primlist.Add(new RectanglePrimitive(Rectangle.FromLTRB(bdleft + 3, bdtop + 3, (int)(bdleft + (bdwidth - 3) * ForegroundMeter.PercentDisp), bdtop + bdheight - 3), BlendColor(ForegroundMeter.ColorBegin, ForegroundMeter.ColorEnd, ForegroundMeter.PercentDisp)));
+            primlist.Add(new RectanglePrimitive(Rectangle.FromLTRB(bdleft + 3, bdtop + 3, Convert.ToInt32(bdleft +3+ (bdwidth - 6) * ForegroundMeter.PercentDisp), bdtop + bdheight - 3), BlendColor(ForegroundMeter.ColorBegin, ForegroundMeter.ColorEnd, ForegroundMeter.PercentDisp)));
             //Highlight Bar
-            primlist.Add(new RectanglePrimitive(Rectangle.FromLTRB(bdleft + 3, bdtop + 3, (int)(bdleft + (bdwidth - 3) * HighlightMeter.PercentDisp), bdtop + bdheight - 3), BlendColor(HighlightMeter.ColorBegin, HighlightMeter.ColorEnd, HighlightMeter.PercentDisp)));
+            primlist.Add(new RectanglePrimitive(Rectangle.FromLTRB(bdleft + 3, bdtop + 3, Convert.ToInt32(bdleft +3+ (bdwidth - 6) * HighlightMeter.PercentDisp), bdtop + bdheight - 3), BlendColor(HighlightMeter.ColorBegin, HighlightMeter.ColorEnd, HighlightMeter.PercentDisp)));
             return primlist;
         }
         public abstract string GetString();

@@ -211,7 +211,7 @@ namespace Infomate {
                 BackgroundMeter.ColorEnd = Color.FromArgb(255, 178, 148);
             }
             HighlightMeter.Percent = 0.0;
-            //Debug.WriteLine(batterystats.Voltage);
+            //Debug.WriteLine(batterystats.Capacity);
         }
     }
 }
