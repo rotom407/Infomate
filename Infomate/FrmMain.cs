@@ -25,6 +25,10 @@ namespace Infomate {
         private int Fwidth = 0;
         private int Fheight = 0;
         private List<BarGraphElement> bargraphlist = new List<BarGraphElement>();
+        private bool batteryen = true;
+        private bool cpumemen = true;
+        private bool neten = true;
+
         private void Form1_Load(object sender, EventArgs e) {
             Rectangle rect = Screen.PrimaryScreen.Bounds;
             ShowInTaskbar = false;
@@ -37,12 +41,15 @@ namespace Infomate {
             
             bargraphlist.Add(new BatteryBarGraph());
             bargraphlist.Add(new CPUMemoryBarGraph());
+            bargraphlist.Add(new NetworkBarGraph());
             int i = 0;
             foreach (BarGraphElement bge in bargraphlist) {
                 bge.Initialize();
                 bge.Boundary = new Rectangle(0, i*24, 200, 24);
                 i++;
             }
+
+            TmrUpdateData.Interval = Globals.dataupdateinterval;
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e) {
@@ -92,7 +99,7 @@ namespace Infomate {
         }
 
         private void TmrAnimation_Timer(object sender, EventArgs e) {
-            RectangleF boundaryrf=new RectangleF(0,0,0,0);
+            RectangleF boundaryrf=new RectangleF(0,0,24,24);
             foreach(BarGraphElement bge in bargraphlist) {
                 bge.UpdateAnimation(false);
                 boundaryrf = RectangleF.Union(boundaryrf, bge.BoundaryDisp);
@@ -106,19 +113,63 @@ namespace Infomate {
             Invalidate();
         }
 
-        private void MenuItem1_Click(object sender, EventArgs e) {
+        private void MenuItem1_Click(object sender, EventArgs e) {  //Quit
             Application.Exit();
         }
 
-        private void MenuItem2_Click(object sender, EventArgs e) {
-            FrmConfig form2 = new FrmConfig();
-            switch (form2.ShowDialog()) {
-                case DialogResult.OK:
+        /*
+        FrmConfig form2 = new FrmConfig();
+        switch (form2.ShowDialog()) {
+            case DialogResult.OK:
+            MessageBox.Show(form2.textBox1.Text);
+            break;
+            case DialogResult.Cancel:
+            break;
+        }*/
+        private void MenuItem2_Click(object sender, EventArgs e) {  //Battery
+            batteryen = !batteryen;
+            MenuItem2.Checked = batteryen;
+            if (batteryen) {
+                bargraphlist.Add(new BatteryBarGraph());
+            } else {
+                bargraphlist.RemoveAll(x => x is BatteryBarGraph);
+            }
+            int i = 0;
+            foreach (BarGraphElement bge in bargraphlist) {
+                bge.Initialize();
+                bge.Boundary = new Rectangle(0, i * 24, 200, 24);
+                i++;
+            }
+        }
+        private void menuItem3_Click(object sender, EventArgs e) {  //CPU/Mem
+            cpumemen = !cpumemen;
+            menuItem3.Checked = cpumemen;
+            if (cpumemen) {
+                bargraphlist.Add(new CPUMemoryBarGraph());
+            } else {
+                bargraphlist.RemoveAll(x => x is CPUMemoryBarGraph);
+            }
+            int i = 0;
+            foreach (BarGraphElement bge in bargraphlist) {
+                bge.Initialize();
+                bge.Boundary = new Rectangle(0, i * 24, 200, 24);
+                i++;
+            }
+        }
 
-                    MessageBox.Show(form2.textBox1.Text);
-                    break;
-                case DialogResult.Cancel:
-                    break;
+        private void menuItem4_Click(object sender, EventArgs e) {  //Net
+            neten = !neten;
+            menuItem4.Checked = neten;
+            if (neten) {
+                bargraphlist.Add(new NetworkBarGraph());
+            } else {
+                bargraphlist.RemoveAll(x => x is NetworkBarGraph);
+            }
+            int i = 0;
+            foreach (BarGraphElement bge in bargraphlist) {
+                bge.Initialize();
+                bge.Boundary = new Rectangle(0, i * 24, 200, 24);
+                i++;
             }
         }
 

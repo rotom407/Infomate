@@ -34,6 +34,8 @@
             this.MnuOptions = new System.Windows.Forms.ContextMenu();
             this.MenuItem2 = new System.Windows.Forms.MenuItem();
             this.MenuItem1 = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // TmrAnimation
@@ -52,19 +54,36 @@
             // 
             this.MnuOptions.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MenuItem2,
+            this.menuItem3,
+            this.menuItem4,
             this.MenuItem1});
             // 
             // MenuItem2
             // 
+            this.MenuItem2.Checked = true;
             this.MenuItem2.Index = 0;
-            this.MenuItem2.Text = "Add Item...";
+            this.MenuItem2.Text = "Battery";
             this.MenuItem2.Click += new System.EventHandler(this.MenuItem2_Click);
             // 
             // MenuItem1
             // 
-            this.MenuItem1.Index = 1;
+            this.MenuItem1.Index = 3;
             this.MenuItem1.Text = "Quit";
             this.MenuItem1.Click += new System.EventHandler(this.MenuItem1_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Checked = true;
+            this.menuItem3.Index = 1;
+            this.menuItem3.Text = "CPU/Memory";
+            this.menuItem3.Click += new System.EventHandler(this.menuItem3_Click);
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Checked = true;
+            this.menuItem4.Index = 2;
+            this.menuItem4.Text = "Network";
+            this.menuItem4.Click += new System.EventHandler(this.menuItem4_Click);
             // 
             // FrmMain
             // 
@@ -96,6 +115,8 @@
         private System.Windows.Forms.ContextMenu MnuOptions;
         private System.Windows.Forms.MenuItem MenuItem1;
         private System.Windows.Forms.MenuItem MenuItem2;
+        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem menuItem4;
     }
 }
 
